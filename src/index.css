@@ -1,0 +1,29 @@
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overscroll-behavior-x: none;
+}
+
+a, a:hover, a:visited, a:link, a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  background-color: #1a9ba8;
+}
+
+*::-webkit-scrollbar-corner {
+  background-color: #0d1112;
+}
+
+*::selection {
+  color: #1a9ba8;
+  background: #000000;
+}
