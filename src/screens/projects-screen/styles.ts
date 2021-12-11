@@ -1,4 +1,3 @@
-import theme from "../../theme";
 import { SXStyles } from "../../types";
 
 const sx: SXStyles = {

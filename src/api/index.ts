@@ -1,6 +1,6 @@
 import { db, storage } from "..";
 import { v4 as uuidv4 } from 'uuid';
-import { ImageObject, Project, ProjectBody } from "../types";
+import { Project, ProjectBody } from "../types";
 import { projectConverter } from "../firebase/firebase-config";
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { deleteObject, getDownloadURL, ref, StorageReference, uploadBytes } from "firebase/storage";
