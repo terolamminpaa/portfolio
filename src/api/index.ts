@@ -86,7 +86,7 @@ export default class Api {
     }
     const projectsRef = collection(db, "projects");
     const docRef = await addDoc(projectsRef, project);
-    return Api.getSingleProject(docRef.id);
+    return await Api.getSingleProject(docRef.id);
   }
 
   /**
