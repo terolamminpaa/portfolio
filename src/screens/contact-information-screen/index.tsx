@@ -7,8 +7,14 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import DownloadIcon from '@mui/icons-material/Download';
 import { Box, Link, Paper, Stack, Typography } from '@mui/material';
 
+/**
+ * Component props
+ */
 interface Props { }
 
+/**
+ * Component state
+ */
 interface State {
   cvUrl: string;
 }

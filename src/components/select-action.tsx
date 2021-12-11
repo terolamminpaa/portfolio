@@ -2,12 +2,18 @@ import { useRef, useState } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 
+/**
+ * Interface for action item
+ */
 interface ActionItem {
   text: string;
   icon?: JSX.Element;
   action: () => void;
 }
 
+/**
+ * Component props
+ */
 interface Props {
   actionItems: ActionItem[];
 }

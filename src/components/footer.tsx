@@ -11,7 +11,7 @@ import { BottomNavigation, BottomNavigationAction, Hidden, Paper } from '@mui/ma
 export default function Footer() {
 
   const navigateFunction = useNavigate();
-
+  
   const navigate = (event: SyntheticEvent<Element, Event>, value: string) => {
     navigateFunction(value);
   }

@@ -6,7 +6,7 @@ import AuthContext from './contexts/auth-context';
 import SignInScreen from './screens/sign-in-screen';
 import ProjectsScreen from './screens/projects-screen';
 import NotFoundScreen from './screens/not-found-screen';
-import ProjectFormScreen from './screens/add-project-screen';
+import ProjectFormScreen from './screens/project-form-screen';
 import ProjectDetailsScreen from './screens/project-details-screen';
 import ContactInformationScreen from './screens/contact-information-screen';
 

@@ -1,5 +1,8 @@
 import { SxProps, Theme } from "@mui/system";
 
+/**
+ * Interface for project
+ */
 export interface Project {
   id?: string;
   title: string;
@@ -9,6 +12,9 @@ export interface Project {
   github: string;
 }
 
+/**
+ * Interface for project body
+ */
 export interface ProjectBody {
   projectTitle: string;
   projectText: string;
@@ -24,6 +30,9 @@ export interface ImageObject {
   url: string;
 }
 
+/**
+ * Interface for sx styles
+ */
 export interface SXStyles {
   [key: string]: SxProps<Theme>
 }

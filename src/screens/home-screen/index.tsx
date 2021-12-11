@@ -7,8 +7,14 @@ import { getDownloadURL } from '@firebase/storage';
 import BasicLayout from '../../layouts/basic-layout';
 import { Avatar, Button, Grid, Stack, Typography } from '@mui/material';
 
+/**
+ * Component props
+ */
 interface Props { }
 
+/**
+ * Component state
+ */
 interface State {
   imageUrl: string;
 }

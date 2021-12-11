@@ -1,9 +1,12 @@
 import React from 'react';
+import sx from './styles';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import { Box, Container } from '@mui/material';
-import './styles.css';
 
+/**
+ * Component props
+ */
 interface Props {
   maxWidth?: number;
 }
@@ -20,10 +23,10 @@ class BasicLayout extends React.Component<Props> {
     const { maxWidth } = this.props;
 
     return (
-      <Box className="background">
+      <Box sx={sx.background}>
         <Header />
-        <Box className="content">
-          <Container className="container" style={{ maxWidth: maxWidth || 1200 }} sx={{ pt: 2 }}>
+        <Box sx={sx.content}>
+          <Container sx={sx.container} style={{ maxWidth: maxWidth || 1200 }}>
             { this.props.children }
           </Container>
         </Box>

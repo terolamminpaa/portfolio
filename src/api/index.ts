@@ -16,7 +16,6 @@ export default class Api {
    *
    * @param email user email
    * @param password user password
-   * @returns user credentials
    */
   public static signIn = async (email: string, password: string): Promise<void> => {
     try {
@@ -72,7 +71,7 @@ export default class Api {
   /**
    * Add project to firestore
    *
-   * @param project project
+   * @param body project body
    * @returns created project
    */
   public static addProject = async (body: ProjectBody): Promise<Project> => {
@@ -93,9 +92,9 @@ export default class Api {
   /**
    * Edit project in firestore
    *
-   * @param id project id
-   * @param changes changes to project 
-   * @returns project with changes
+   * @param project project
+   * @param body project body
+   * @returns edited project
    */
   public static editProject = async (project: Project, body: Partial<ProjectBody>): Promise<Project> => {
 
@@ -131,7 +130,8 @@ export default class Api {
   /**
    * Delete project from firestore
    *
-   * @param project project
+   * @param id project id
+   * @param imagePath image path
    */
   public static deleteProject = async (id: string, imagePath: string): Promise<void> => {
     await Api.deleteProjectImage(imagePath);
@@ -141,8 +141,8 @@ export default class Api {
   /**
    * Upload image to firebase storage
    *
-   * @param image image file
-   * @returns reference to firebase storage
+   * @param imageFile image file
+   * @returns storage reference
    */
   public static uploadProjectImage = async (imageFile: File): Promise<StorageReference> => {
     const storageRef = ref(storage, `project-images/${uuidv4()}.${imageFile.name.split(".").pop()}`);
@@ -153,7 +153,7 @@ export default class Api {
   /**
    * Delete image from firebase storage
    *
-   * @param imagePath image name
+   * @param imagePath image path
    */
   public static deleteProjectImage = async (imagePath: string): Promise<void> => {
     const storageRef = ref(storage, imagePath);
