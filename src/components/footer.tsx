@@ -1,4 +1,4 @@
-import React from 'react';
+import { SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import WorkIcon from '@mui/icons-material/Work';
@@ -12,7 +12,7 @@ export default function Footer() {
 
   const navigateFunction = useNavigate();
 
-  const navigate = (event: React.SyntheticEvent<Element, Event>, value: string) => {
+  const navigate = (event: SyntheticEvent<Element, Event>, value: string) => {
     navigateFunction(value);
   }
   

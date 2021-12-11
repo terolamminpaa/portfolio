@@ -2,24 +2,33 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import HomeIcon from '@mui/icons-material/Home';
 import WorkIcon from '@mui/icons-material/Work';
+import CircleIcon from '@mui/icons-material/Circle';
 import PersonIcon from '@mui/icons-material/Person';
 import { AppBar, Box, Button, Container, Hidden, Stack, Toolbar, Typography } from '@mui/material';
+import AuthContext from '../contexts/auth-context';
 
 /**
  * Header component
  */
-export default class Header extends React.Component {
+ export default class Header extends React.Component {
 
   /**
    * Component render
    */
-  public render() {
+  public render = () => {
     return (
       <Box>
         <AppBar position="static" color="secondary" elevation={0}>
           <Container disableGutters>
             <Toolbar>
-              <Typography style={{ flexGrow: 1 }} fontWeight="bold" component="h1" variant="h5">Tero Lamminpää</Typography>
+                <Stack direction="row" spacing={2} style={{ flexGrow: 1 }}>
+                  <AuthContext.Consumer>
+                    {(context) => (
+                      context.user ? <CircleIcon fontSize="small" color="success" sx={{ alignSelf: "center" }} /> : <></>
+                    )}
+                  </AuthContext.Consumer>
+                  <Typography fontWeight="bold" component="h1" variant="h5">Tero Lamminpää</Typography>
+                </Stack>
               <Hidden smDown>
                 <Stack direction="row" spacing={2}>
                   <Link to="/">

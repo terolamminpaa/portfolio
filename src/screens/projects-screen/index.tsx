@@ -1,20 +1,36 @@
-import theme from '../../theme';
+import { useContext, useEffect, useState } from 'react';
+import sx from './styles';
+import Api from '../../api';
+import { Project } from '../../types';
 import { useNavigate } from 'react-router';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import BasicLayout from '../../layouts/basic-layout';
-import image from '../../resources/images/test-image.png';
-import { Button, ButtonBase, Card, CardActions, CardContent, CardHeader, CardMedia, Grid, Stack, Typography } from '@mui/material';
+import AuthContext from '../../contexts/auth-context';
+import SelectAction from '../../components/select-action';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { Button, ButtonBase, Card, CardActions, CardContent, CardHeader, CardMedia, Grid, Paper, Skeleton, Stack, Typography } from '@mui/material';
+import ConfirmDialog from '../../components/confirm-dialog';
 
 /**
  * Projects screen component
  */
 export default function ProjectsScreen() {
-
   const navigateFunction = useNavigate();
-
-  const navigate = (project: object) => () => {
-    navigateFunction("/project-details", { state: { project: project } });
-  }
+  const context = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project|null>(null);
+  
+  useEffect(() => {
+    setLoading(true);
+    Api.getProjects().then(projects => {
+      setProjects(projects);
+      setLoading(false);
+    });
+  }, []);
 
   const shorten = (html: string) => {
     return `${stripHtml(html).slice(0, 115)}... `;
@@ -25,32 +41,101 @@ export default function ProjectsScreen() {
     return doc.body.textContent || "";
   }
 
+  const navigateToProjectDetails = (project: Project) => () => {
+    navigateFunction("/project-details", { state: { project: project } });
+  }
+
+  const navigateToNewProjectForm = () => {
+    navigateFunction("/add-project");
+  }
+
+  const navigateToEditProjectForm = (project: Project) => () => {
+    navigateFunction("/edit-project", { state: { project: project } });
+  }
+
+  const confirmProjectDeletion = (project: Project) => () => {
+    setSelectedProject(project);
+    setConfirmDialogOpen(true);
+  }
+
+  const deleteProject = () => {
+
+    if (!selectedProject || !selectedProject.id) {
+      return;
+    }
+
+    Api.deleteProject(selectedProject.id, selectedProject.imagePath).then(() => {
+      setProjects(projects.filter(item => item.id !== selectedProject.id));
+    });
+    
+    setConfirmDialogOpen(false)
+  }
+
+  const cancelProjectDelete = () => {
+    setSelectedProject(null);
+    setConfirmDialogOpen(false);
+  }
+
+  const cardAction = (project: Project) => (
+    <AuthContext.Consumer>
+      {(context) => (
+        context.user ?
+          <SelectAction
+            actionItems={[
+              {
+                text: "Muokkaa",
+                icon: <EditIcon />,
+                action: navigateToEditProjectForm(project)
+              },
+              {
+                text: "Poista",
+                icon: <DeleteIcon />,
+                action: confirmProjectDeletion(project)
+              }
+            ]}
+          />
+        :
+          <></>
+      )}
+    </AuthContext.Consumer>
+  );
+
   const renderProjectCards = () => {
-    const projects = Array.from(new Array(6)).map((project, index) => ({
-      id: index,
-      title: "Projektin nimi",
-      image: image,
-      text: `<p class="paragraph">– Meidän työelämän historiasta valtaosa on kuitenkin sellaista aikaa, kun vapaa-ajalla työntekijöihin ei otettu yhteyttä ollenkaan, Koskinen muistuttaa.</p><p class="paragraph">Kyseessä on Koskisen mukaan kuitenkin melko uusi ilmiö työelämässä.</p><p class="paragraph">– Se (yhteyden ottaminen vapaa-ajalla) on koko ajan kuitenkin lisääntynyt ja muuttunut ongelmalliseksi esimerkiksi työajan pitkittymisen ja työ- ja vapaa-ajan sekoittumisen näkökulmasta, Koskinen kertoo.</p><p class="paragraph">Koskinen näkeekin lakimuutokselle tarvetta myös Suomessa.</p><p class="paragraph">– Jos kehitys on sellaista, mitä se on nyt viimeisinä vuosina ollut, niin työsuojelullisista syistä kiellon säätäminen laissa olisi aivan mietittävä asia, Koskinen sanoo.</p><h3 class="subheadline">Euroopan maissa kielletty</h3><p class="paragraph">Työnantaja ei saa ottaa yhteyttä työntekijöihinsä enää ainakaan <a href="https://www.theguardian.com/lifeandstyle/2021/nov/15/portugal-boss-texts-work-us-employment" rel="noopener">Ranskassa, Saksassa, Italiassa ja Belgiassa.</a> Viimeisimpänä maana myös <a href="https://edition.cnn.com/2021/11/11/success/portugal-employer-contact-law/index.html" rel="noopener">Portugali liittyi</a> yhteydenotot kieltävien maiden listalle.</p><p class="paragraph">Maa hyväksyi lain, joka kieltää esihenkilöitä esimerkiksi soittamasta tai laittamasta viestiä työntekijöilleen, jotka ovat vapaalla. Lain rikkomisesta voi seurata jopa sakkorangaistus.</p><p class="paragraph">Lakimuutoksen yhteydessä portugalilaisilla on myös oikeus kieltäytyä etätyöstä ja työnantajalla on velvollisuus kustantaa työntekijän etätyöhön liittyvät kulut, kuten tarvittavat työvälineet.</p><p class="paragraph">Ranskan työaikalain mukaan työntekijöitä ei voi enää vaatia olemaan sähköpostitse tavoitettavissa vapaa-ajalla. Ranskalaisilla on myös oikeus sulkea työsähköposti vapaa-ajalla.</p>`,
-      github: "#"
-    }));
+
+    if (loading) {
+      return Array.from(new Array(context.user ? 2 : 3)).map((item, index) => (
+        <Grid key={index} item md={4} sm={6} xs={12}>
+          <Card>
+            <CardHeader title={<Skeleton variant="text" />} />
+            <CardMedia>
+              <Skeleton variant="rectangular" height={210} />
+            </CardMedia>
+            <CardContent>
+              <Skeleton variant="text" />
+              <Skeleton variant="text" />
+            </CardContent>
+          </Card>
+        </Grid>
+      ));
+    }
 
     return projects.map((project, index) => (
       <Grid key={index} item md={4} sm={6} xs={12}>
-        <Card>
-          <CardHeader title={project.title} />
-          <CardMedia component="img" image={project.image} height={210} />
-          <CardContent>
-            <Typography component="span">
+        <Card sx={sx.projectCard}>
+          <CardHeader title={project.title} action={cardAction(project)} />
+          <CardMedia component="img" image={project.imageUrl} height={210} />
+          <CardContent sx={sx.projectCardContent}>
+            <Typography component="span" sx={sx.projectCardText}>
               {shorten(project.text)}
             </Typography>
-            <ButtonBase sx={{ color: theme.palette.primary.main }} onClick={navigate(project)}>
-              <Typography component="span">
+            <ButtonBase onClick={navigateToProjectDetails(project)}>
+              <Typography color="lightblue" component="span">
                 Lue lisää
               </Typography>
             </ButtonBase>
           </CardContent>
-          <CardActions sx={{ pt: 0, pb: 2, justifyContent: "center" }}>
-            <Button href={project.github} color="inherit" variant="outlined" sx={{ textTransform: "none" }}>
+          <CardActions sx={sx.projectCardActions}>
+            <Button href={project.github} color="inherit" variant="outlined" sx={sx.githubButton}>
               <Stack direction="row" spacing={1}>
                 <GitHubIcon />
                 <Typography>GitHub</Typography>
@@ -65,8 +150,33 @@ export default function ProjectsScreen() {
   return (
     <BasicLayout>
       <Grid container spacing={2}>
+        <AuthContext.Consumer>
+          {(context) => (
+            context.user ?
+              <Grid sx={sx.newProjectGrid} item md={4} sm={6} xs={12}>
+                <Paper sx={sx.newProjectContainer}>
+                  <Button color="inherit" sx={sx.newProjectButton} onClick={navigateToNewProjectForm}>
+                    <Stack direction="column" spacing={2}>
+                      <AddCircleOutlineIcon sx={sx.newProjectIcon} />
+                      <Typography alignSelf="center">Lisää projekti</Typography>
+                    </Stack>
+                  </Button>
+                </Paper>
+              </Grid>
+            :
+              <></>
+          )}
+        </AuthContext.Consumer>
         {renderProjectCards()}
       </Grid>
+      <ConfirmDialog
+        open={confirmDialogOpen}
+        acceptText="Poista"
+        cancelText="Peruuta"
+        title="Oletko varma, että haluat poistaa projektin?"
+        accept={deleteProject}
+        cancel={cancelProjectDelete}
+      />
     </BasicLayout>
   );
 

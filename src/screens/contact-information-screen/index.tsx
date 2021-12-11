@@ -1,15 +1,17 @@
 import React from 'react';
-import CV from '../../resources/files/cv.pdf';
+import { storage } from '../..';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import BasicLayout from '../../layouts/basic-layout';
+import { getDownloadURL, ref } from 'firebase/storage';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import DownloadIcon from '@mui/icons-material/Download';
 import { Box, Link, Paper, Stack, Typography } from '@mui/material';
-import './styles.css';
 
 interface Props { }
 
-interface State { }
+interface State {
+  cvUrl: string;
+}
 
 /**
  * Contact information screen component
@@ -21,13 +23,25 @@ export default class ContactInformationScreen extends React.Component<Props, Sta
    */
   constructor(props: Props) {
     super(props);
-    this.state = {};
+    this.state = {
+      cvUrl: ""
+    };
+  }
+
+  /**
+   * Component did mount
+   */
+   public componentDidMount = async () => {
+    const cvUrl = await getDownloadURL(ref(storage, "resources/files/cv.pdf"));
+    this.setState({ cvUrl });
   }
 
   /**
    * Component render
    */
-  public render() {
+   public render = () => {
+    const { cvUrl } = this.state;
+
     return (
       <BasicLayout>
         <Paper sx={{ p: 2 }}>
@@ -37,7 +51,7 @@ export default class ContactInformationScreen extends React.Component<Props, Sta
                 <Box>
                   <DownloadIcon />
                 </Box>
-                <Link href={CV} target="_blank" download="cv_tero_lamminpaa.pdf">
+                <Link href={cvUrl} target="_blank" download="cv_tero_lamminpaa.pdf">
                   <Typography color="lightblue">Lataa CV</Typography>
                 </Link>
               </Stack>

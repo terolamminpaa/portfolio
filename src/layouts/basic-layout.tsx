@@ -16,7 +16,7 @@ class BasicLayout extends React.Component<Props> {
   /**
    * Component render
    */
-  public render() {
+  public render = () => {
     const { maxWidth } = this.props;
 
     return (
