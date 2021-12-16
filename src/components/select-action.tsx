@@ -19,7 +19,7 @@ interface Props {
 }
 
 /**
- * Footer component
+ * Select action component
  */
 export default function SelectAction(props: Props) {
   const anchorRef = useRef(null);
