@@ -27,7 +27,7 @@ class BasicLayout extends React.Component<Props> {
         <Header />
         <Box sx={sx.content}>
           <Container sx={sx.container} style={{ maxWidth: maxWidth || 1200 }}>
-            { this.props.children }
+            {this.props.children}
           </Container>
         </Box>
         <Footer />
