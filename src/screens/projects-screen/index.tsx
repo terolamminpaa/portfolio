@@ -32,7 +32,7 @@ export default function ProjectsScreen() {
     });
   }, []);
 
-  const shorten = (html: string) => {
+  const shorten = (html: string): string => {
     return `${stripHtml(html).slice(0, 115)}... `;
   }
 
